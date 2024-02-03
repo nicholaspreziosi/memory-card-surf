@@ -82,6 +82,7 @@ function Cards({
               <div key={item.id}>
                 <Grid key={item.id} item sx={{ padding: "0.5rem" }}>
                   <Card
+                    className="card"
                     sx={{
                       width: "240px",
                       height: "330px",
@@ -92,6 +93,7 @@ function Cards({
                       "&:hover": {
                         bgcolor: "#E8EEF3",
                       },
+                      transition: "background-color 0.25s ease",
                     }}
                     variant="outlined"
                     onClick={(e) => {

@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import Typography from "@mui/material/Typography";
 
 function WinMessage({ win, resetGame }) {
   win ? disableBodyScroll(document) : enableBodyScroll(document);
@@ -26,12 +27,13 @@ function WinMessage({ win, resetGame }) {
               backgroundColor: "white",
               padding: "1rem",
               margin: "1rem",
-              maxWidth: "800px",
+              maxWidth: "600px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
               gap: "1rem",
+              borderRadius: "0.75rem",
             }}
           >
             <div
@@ -49,15 +51,31 @@ function WinMessage({ win, resetGame }) {
               ></CloseIcon>
             </div>
 
-            <h1 style={{ padding: "0.5rem 1rem" }}>
-              Congrats! You surfed all of the spots!
-            </h1>
+            <Typography
+              gutterBottom
+              variant="h5"
+              sx={{
+                fontWeight: 600,
+                padding: "0.5rem 1rem",
+              }}
+            >
+              Congrats! You surfed all of the spots & won the 2024 World
+              Championship Tour of Surfing!
+            </Typography>
             <Button
               variant="text"
               onClick={() => {
                 resetGame();
               }}
-              style={{ width: "150px", cursor: "pointer" }}
+              style={{
+                width: "150px",
+                cursor: "pointer",
+                bgColor: "white",
+                "&:hover": {
+                  bgcolor: "#E8EEF3",
+                },
+                borderRadius: "0.75",
+              }}
             >
               Reset Game
             </Button>
