@@ -14,7 +14,7 @@ function App() {
     bestScore: 0,
   });
 
-  const [win, setWin] = useState(true);
+  const [win, setWin] = useState(false);
 
   const [cardData, setCardData] = useState([
     {
