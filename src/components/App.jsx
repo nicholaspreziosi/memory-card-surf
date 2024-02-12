@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Cards from "./Cards.jsx";
 import Score from "./Score.jsx";
 import WinMessage from "./WinMessage.jsx";
 import Instructions from "./Instructions.jsx";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 function App() {
-  const [isLoading, setLoading] = useState(true);
-
   const [scoreData, setScoreData] = useState({
     score: 0,
     bestScore: 0,
@@ -32,6 +30,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 1,
@@ -48,6 +48,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 2,
@@ -64,6 +66,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 3,
@@ -80,6 +84,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 4,
@@ -96,6 +102,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 5,
@@ -112,6 +120,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 6,
@@ -128,6 +138,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 7,
@@ -144,6 +156,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 8,
@@ -160,6 +174,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 9,
@@ -176,6 +192,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 10,
@@ -192,6 +210,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
     {
       id: 11,
@@ -208,6 +228,8 @@ function App() {
       swellDir: null,
       swellDir16Point: null,
       waterTemp: null,
+      error: false,
+      loading: true,
     },
   ]);
 
@@ -234,61 +256,38 @@ function App() {
   async function getForecast() {
     let output = [];
     for (let obj of cardData) {
-      await fetch(
-        `https://api.weatherapi.com/v1/marine.json?key=76940e6c707d4eeab27163440240102&q=${obj.latitude},${obj.longitude}&days=8&aqi=no&alerts=no`,
-        { mode: "cors" }
-      )
-        .then((response) => response.json())
-        .then((marineData) => {
-          let swellHeight =
-            marineData.forecast.forecastday[0].hour[0].swell_ht_ft;
-          let swellPeriod =
-            marineData.forecast.forecastday[0].hour[0].swell_period_secs;
-          let swellDir = marineData.forecast.forecastday[0].hour[0].swell_dir;
-          let swellDir16Point =
-            marineData.forecast.forecastday[0].hour[0].swell_dir_16_point;
-          let waterTemp =
-            marineData.forecast.forecastday[0].hour[0].water_temp_f;
-          let updatedItem = { ...obj };
-          updatedItem.swellHeight = swellHeight;
-          updatedItem.swellPeriod = swellPeriod;
-          updatedItem.swellDir = swellDir;
-          updatedItem.swellDir16Point = swellDir16Point;
-          updatedItem.waterTemp = waterTemp;
-          output.push(updatedItem);
-        });
+      try {
+        const response = await axios.get(
+          `https://api.weatherapi.com/v1/marine.json?key=76940e6c707d4eeab27163440240102&q=${obj.latitude},${obj.longitude}&days=8&aqi=no&alerts=no`
+        );
+        let data = response.data;
+        let swellHeight = data.forecast.forecastday[0].hour[0].swell_ht_ft;
+        let swellPeriod =
+          data.forecast.forecastday[0].hour[0].swell_period_secs;
+        let swellDir = data.forecast.forecastday[0].hour[0].swell_dir;
+        let swellDir16Point =
+          data.forecast.forecastday[0].hour[0].swell_dir_16_point;
+        let waterTemp = data.forecast.forecastday[0].hour[0].water_temp_f;
+        let updatedItem = { ...obj };
+        updatedItem.swellHeight = swellHeight;
+        updatedItem.swellPeriod = swellPeriod;
+        updatedItem.swellDir = swellDir;
+        updatedItem.swellDir16Point = swellDir16Point;
+        updatedItem.waterTemp = waterTemp;
+        updatedItem.loading = false;
+        output.push(updatedItem);
+      } catch (err) {
+        let updatedItem = { ...obj };
+        updatedItem.error = err;
+        output.push(updatedItem);
+      }
     }
     setCardData(output);
-    setLoading(false);
   }
 
   useEffect(() => {
     getForecast();
   }, []);
-
-  if (isLoading) {
-    return (
-      <Container
-        sx={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          gutterBottom
-          variant="h5"
-          sx={{
-            fontWeight: 600,
-          }}
-        >
-          Loading...
-        </Typography>
-      </Container>
-    );
-  }
 
   return (
     <>

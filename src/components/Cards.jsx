@@ -124,21 +124,47 @@ function Cards({
                       <Typography gutterBottom variant="body1">
                         {item.location}, {item.country}
                       </Typography>
-                      <Typography
-                        gutterBottom
-                        variant="body1"
-                        sx={{ fontWeight: 600, fontSize: 14 }}
-                      >
-                        {item.swellHeight} ft at {item.swellPeriod} sec{" "}
-                        {item.swellDir}º {item.swellDir16Point}
-                      </Typography>
-                      <Typography
-                        gutterBottom
-                        variant="body1"
-                        sx={{ fontWeight: 600, fontSize: 14 }}
-                      >
-                        Water Temp: {item.waterTemp}º F
-                      </Typography>
+                      {item.loading && !item.error && (
+                        <>
+                          <Typography
+                            gutterBottom
+                            variant="body1"
+                            sx={{ fontWeight: 600, fontSize: 14 }}
+                          >
+                            Loading...
+                          </Typography>
+                        </>
+                      )}
+                      {!item.error && !item.loading && (
+                        <>
+                          <Typography
+                            gutterBottom
+                            variant="body1"
+                            sx={{ fontWeight: 600, fontSize: 14 }}
+                          >
+                            {item.swellHeight} ft at {item.swellPeriod} sec{" "}
+                            {item.swellDir}º {item.swellDir16Point}
+                          </Typography>
+                          <Typography
+                            gutterBottom
+                            variant="body1"
+                            sx={{ fontWeight: 600, fontSize: 14 }}
+                          >
+                            Water Temp: {item.waterTemp}º F
+                          </Typography>
+                        </>
+                      )}
+                      {item.error && (
+                        <>
+                          <Typography
+                            gutterBottom
+                            variant="body1"
+                            sx={{ fontWeight: 600, fontSize: 14 }}
+                          >
+                            Error: Failed to Obtain Surf Data
+                          </Typography>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                 </Grid>
