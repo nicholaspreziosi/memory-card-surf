@@ -257,25 +257,21 @@ function App() {
     let output = [];
     for (let obj of cardData) {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `https://api.weatherapi.com/v1/marine.json?key=76940e6c707d4eeab27163440240102&q=${obj.latitude},${obj.longitude}&days=8&aqi=no&alerts=no`,
           {
-            mode: "cors",
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET",
+            },
           }
         );
-        if (!response.ok) {
-          throw new Error(
-            `This is an HTTP error: The status is ${response.status}`
-          );
-        }
-        let data = await response.json();
-        let swellHeight = data.forecast.forecastday[0].hour[0].swell_ht_ft;
-        let swellPeriod =
-          data.forecast.forecastday[0].hour[0].swell_period_secs;
-        let swellDir = data.forecast.forecastday[0].hour[0].swell_dir;
-        let swellDir16Point =
-          data.forecast.forecastday[0].hour[0].swell_dir_16_point;
-        let waterTemp = data.forecast.forecastday[0].hour[0].water_temp_f;
+        let data = response.data.forecast;
+        let swellHeight = data.forecastday[0].hour[0].swell_ht_ft;
+        let swellPeriod = data.forecastday[0].hour[0].swell_period_secs;
+        let swellDir = data.forecastday[0].hour[0].swell_dir;
+        let swellDir16Point = data.forecastday[0].hour[0].swell_dir_16_point;
+        let waterTemp = data.forecastday[0].hour[0].water_temp_f;
         let updatedItem = { ...obj };
         updatedItem.swellHeight = swellHeight;
         updatedItem.swellPeriod = swellPeriod;
